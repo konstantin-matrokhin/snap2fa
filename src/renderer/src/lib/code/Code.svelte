@@ -1,34 +1,48 @@
 <script>
-    import {message} from "../../stores.js";
+    import {accounts, message} from "../../stores.js";
     import Countdown from "./Countdown.svelte";
-    import {INVALID_CODE_ERROR} from "../../utils";
+    import {INVALID_SECRET_CODE_TEXT} from "../../utils";
 
+    export let id;
     export let issuer;
     export let accountName;
     export let code;
 
     async function copy() {
+        if (!isValidSecret()) {
+            return;
+        }
         await navigator.clipboard.writeText(code);
         message.set("Copied!");
     }
 
     function formatCode(code) {
-        if (code === INVALID_CODE_ERROR) {
-            return code;
-        }
         let codeMiddle = (code.length / 2) + (code.length % 2);
         return code.slice(0, codeMiddle) + " " + code.slice(codeMiddle);
     }
+
+    function isValidSecret() {
+        return code !== INVALID_SECRET_CODE_TEXT;
+    }
+
+    function askDelete() {
+        const text = "Are you sure you want to delete this account?";
+        if (confirm(text)) {
+            accounts.remove(id);
+        }
+    }
 </script>
 
-<div class="account" on:click={copy}>
+<div class="account" on:click={copy} on:contextmenu={askDelete}>
     <div class="account__info">
         <div class="account__issuer">{issuer}</div>
         <div class="account__account">{accountName}</div>
-        <div class="account__value">{formatCode(code)}</div>
+        <div class="account__value">{isValidSecret() ? formatCode(code) : INVALID_SECRET_CODE_TEXT}</div>
     </div>
     <div class="account__side">
-        <Countdown/>
+        {#if isValidSecret() }
+            <Countdown/>
+        {/if}
     </div>
 </div>
 

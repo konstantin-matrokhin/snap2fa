@@ -43,6 +43,13 @@ function createAccounts() {
                 localStorage.setItem('accounts', JSON.stringify(Object.fromEntries(accountsMap)));
                 return accountsMap;
             });
+        },
+        remove: (id) => {
+            update(accountsMap => {
+                accountsMap.delete(id)
+                localStorage.setItem('accounts', JSON.stringify(Object.fromEntries(accountsMap)));
+                return accountsMap;
+            });
         }
     }
 }

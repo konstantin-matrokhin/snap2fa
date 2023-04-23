@@ -6,7 +6,7 @@
 
 <div class="code-list">
     {#each Array.from($accounts) as [id, account]}
-        <Code issuer={account.issuer} accountName={account.account} code={$codes.get(id)}/>
+        <Code id={id} issuer={account.issuer} accountName={account.account} code={$codes.get(id)}/>
     {/each}
 
     {#if $message}

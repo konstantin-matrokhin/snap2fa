@@ -3,11 +3,12 @@ import {join} from 'path'
 import {electronApp, is, optimizer} from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
-let win;
+let mainWindow;
+let qrWindow;
 
 function createWindow(): void {
     // Create the browser window.
-    const mainWindow = new BrowserWindow({
+    const win = new BrowserWindow({
         width: 900,
         height: 670,
         show: false,
@@ -21,13 +22,13 @@ function createWindow(): void {
         }
     })
 
-    mainWindow.on('ready-to-show', () => {
-        win = mainWindow;
-        mainWindow.show()
-        mainWindow.webContents.openDevTools()
+    win.on('ready-to-show', () => {
+        mainWindow = win;
+        win.show()
+        win.webContents.openDevTools()
     })
 
-    mainWindow.webContents.setWindowOpenHandler((details) => {
+    win.webContents.setWindowOpenHandler((details) => {
         shell.openExternal(details.url)
         return {action: 'deny'}
     })
@@ -35,9 +36,9 @@ function createWindow(): void {
     // HMR for renderer base on electron-vite cli.
     // Load the remote URL for development or the local html file for production.
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-        mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
+        win.loadURL(process.env['ELECTRON_RENDERER_URL'])
     } else {
-        mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+        win.loadFile(join(__dirname, '../renderer/index.html'))
     }
 }
 
@@ -55,24 +56,18 @@ function createQRReaderWindow() {
         opacity: .5
     });
 
-    ipcMain.on('recorder:init', () => {
-        console.log('recorder:init');
-        desktopCapturer.getSources({
-            types: ['screen']
-        }).then(sources => {
-            qrWin.webContents.send('recorder:sources', sources);
-        });
-    });
-    ipcMain.on('qr:read', (_event, payload) => {
-        const totpData = parseQRContent(payload.text);
-        qrWin.close();
-        win.webContents.send('qr:parsed', totpData);
-    });
-
     qrWin.on('ready-to-show', () => {
         qrWin.show();
         qrWin.webContents.send('window:position', getPosition());
     })
+
+    qrWin.on('closed', () => {
+        qrWindow = null;
+    });
+
+    qrWin.on('close', () => {
+        qrWindow = null;
+    });
 
     function getPosition() {
         return {
@@ -81,21 +76,6 @@ function createQRReaderWindow() {
             width: qrWin.getSize()[0],
             height: qrWin.getSize()[1]
         }
-    }
-
-    // format:
-    // otpauth://totp/accountName?secret=secretCode&issuer=issuerName
-    function parseQRContent(content: string) {
-        const schema = 'otpauth://totp';
-        if (!content?.startsWith(schema)) {
-            return;
-        }
-
-        const uri = new URL(content);
-        const account = uri.pathname.replace(/^\//, '');
-        const secret = uri.searchParams.get('secret');
-        const issuer = uri.searchParams.get('issuer');
-        return {issuer, account, secret};
     }
 
     qrWin.on('move', () => {
@@ -107,7 +87,8 @@ function createQRReaderWindow() {
     } else {
         qrWin.loadFile(join(__dirname, '../renderer/index2.html'))
     }
-    return qrWin;
+
+    qrWindow = qrWin;
 }
 
 // This method will be called when Electron has finished
@@ -125,7 +106,6 @@ app.whenReady().then(() => {
     })
 
     createWindow()
-    createQRReaderWindow()
 
     console.log('permission', systemPreferences.getMediaAccessStatus('screen'));
 
@@ -134,7 +114,6 @@ app.whenReady().then(() => {
         // dock icon is clicked and there are no other windows open.
         if (BrowserWindow.getAllWindows().length === 0) {
             createWindow()
-            createQRReaderWindow()
         }
     })
 })
@@ -150,3 +129,40 @@ app.on('window-all-closed', () => {
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
+
+// format:
+// otpauth://totp/accountName?secret=secretCode&issuer=issuerName
+
+function parseQRContent(content: string) {
+    const schema = 'otpauth://totp';
+    if (!content?.startsWith(schema)) {
+        return;
+    }
+
+    const uri = new URL(content);
+    const account = uri.pathname.replace(/^\//, '');
+    const secret = uri.searchParams.get('secret');
+    const issuer = uri.searchParams.get('issuer');
+    return {issuer, account, secret};
+}
+
+
+ipcMain.on('qr:open', () => {
+    createQRReaderWindow();
+});
+
+ipcMain.on('recorder:init', () => {
+    console.log('recorder:init');
+    desktopCapturer.getSources({
+        types: ['screen']
+    }).then(sources => {
+        if (qrWindow) {
+            qrWindow.webContents.send('recorder:sources', sources);
+        }
+    });
+});
+ipcMain.on('qr:read', (_event, payload) => {
+    const totpData = parseQRContent(payload.text);
+    qrWindow.close();
+    mainWindow.webContents.send('qr:parsed', totpData);
+});

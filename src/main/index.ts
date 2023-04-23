@@ -16,7 +16,6 @@ function createWindow(): void {
         webPreferences: {
             preload: join(__dirname, '../preload/index.js'),
             sandbox: false,
-            devTools: true
         }
     })
 
@@ -41,29 +40,45 @@ function createWindow(): void {
 
 function createQRReaderWindow() {
     const qrWin = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 300,
+        height: 300,
         title: 'QR Reader',
         webPreferences: {
             sandbox: false,
             preload: join(__dirname, '../preload/index.js'),
             webSecurity: false,
-            devTools: true,
             nodeIntegration: true
-        }
+        },
+        opacity: .5
     });
     ipcMain.on('recorder:init', () => {
         console.log('recorder:init');
         desktopCapturer.getSources({
-            types: ['screen'],
-            thumbnailSize: {width: 1920, height: 1080}
+            types: ['screen']
         }).then(sources => {
             qrWin.webContents.send('recorder:sources', sources);
         });
     });
+    ipcMain.on('qr:read', (_event, payload) => {
+        console.log('qr:read', payload.resultPoints);
+        console.log('qr win pos', getPosition());
+    });
     qrWin.on('ready-to-show', () => {
         qrWin.show();
-        qrWin.webContents.openDevTools();
+        qrWin.webContents.send('window:position', getPosition());
+    })
+
+    function getPosition() {
+        return {
+            x: qrWin.getPosition()[0],
+            y: qrWin.getPosition()[1],
+            width: qrWin.getSize()[0],
+            height: qrWin.getSize()[1]
+        }
+    }
+
+    qrWin.on('move', () => {
+        qrWin.webContents.send('window:position', getPosition());
     })
 
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) {

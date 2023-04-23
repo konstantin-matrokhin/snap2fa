@@ -1,8 +1,9 @@
-import {app, shell, BrowserWindow} from 'electron'
+import {app, BrowserWindow, desktopCapturer, ipcMain, shell, systemPreferences} from 'electron'
 import {join} from 'path'
-import {electronApp, optimizer, is} from '@electron-toolkit/utils'
+import {electronApp, is, optimizer} from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import {desktopCapturer, ipcMain, systemPreferences} from 'electron'
+
+let win;
 
 function createWindow(): void {
     // Create the browser window.
@@ -16,10 +17,12 @@ function createWindow(): void {
         webPreferences: {
             preload: join(__dirname, '../preload/index.js'),
             sandbox: false,
+            nodeIntegration: true
         }
     })
 
     mainWindow.on('ready-to-show', () => {
+        win = mainWindow;
         mainWindow.show()
         mainWindow.webContents.openDevTools()
     })
@@ -51,6 +54,7 @@ function createQRReaderWindow() {
         },
         opacity: .5
     });
+
     ipcMain.on('recorder:init', () => {
         console.log('recorder:init');
         desktopCapturer.getSources({
@@ -60,9 +64,11 @@ function createQRReaderWindow() {
         });
     });
     ipcMain.on('qr:read', (_event, payload) => {
-        console.log('qr:read', payload.resultPoints);
-        console.log('qr win pos', getPosition());
+        const totpData = parseQRContent(payload.text);
+        qrWin.close();
+        win.webContents.send('qr:parsed', totpData);
     });
+
     qrWin.on('ready-to-show', () => {
         qrWin.show();
         qrWin.webContents.send('window:position', getPosition());
@@ -75,6 +81,21 @@ function createQRReaderWindow() {
             width: qrWin.getSize()[0],
             height: qrWin.getSize()[1]
         }
+    }
+
+    // format:
+    // otpauth://totp/accountName?secret=secretCode&issuer=issuerName
+    function parseQRContent(content: string) {
+        const schema = 'otpauth://totp';
+        if (!content?.startsWith(schema)) {
+            return;
+        }
+
+        const uri = new URL(content);
+        const account = uri.pathname.replace(/^\//, '');
+        const secret = uri.searchParams.get('secret');
+        const issuer = uri.searchParams.get('issuer');
+        return {issuer, account, secret};
     }
 
     qrWin.on('move', () => {

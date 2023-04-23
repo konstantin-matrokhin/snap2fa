@@ -12,6 +12,16 @@
         secret: "jqsdm5ycfnhuwmry"
       }]]));
     })
+
+    const ipcRenderer = window.electron.ipcRenderer;
+
+    ipcRenderer.on('qr:parsed', (event, payload) => {
+        const {issuer, account, secret} = payload;
+        const maximum = 999;
+        const minimum = 100;
+        const randomNumber = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
+        accounts.update(old => old.set(randomNumber, {issuer, account, secret}));
+    })
 </script>
 
 <main class="container">

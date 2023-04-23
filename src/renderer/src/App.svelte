@@ -1,16 +1,11 @@
 <script>
     import Codes from './lib/Codes.svelte'
-    import {loadAccounts} from "./utils.js";
     import AddAccountButton from "./lib/AddAccountButton.svelte";
     import {accounts} from "./stores.js";
+    import {onMount} from "svelte";
 
-    loadAccounts().then(accs => {
-        // accounts.set(accs);
-      accounts.set(new Map([[1, {
-        issuer: "issuer",
-        account: "test",
-        secret: "jqsdm5ycfnhuwmry"
-      }]]));
+    onMount(() => {
+        accounts.loadAccounts();
     })
 
     const ipcRenderer = window.electron.ipcRenderer;
@@ -20,7 +15,7 @@
         const maximum = 999;
         const minimum = 100;
         const randomNumber = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
-        accounts.update(old => old.set(randomNumber, {issuer, account, secret}));
+        accounts.add(randomNumber, {issuer, account, secret});
     })
 </script>
 

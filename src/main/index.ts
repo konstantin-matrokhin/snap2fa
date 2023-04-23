@@ -143,6 +143,9 @@ function parseQRContent(content: string) {
     const account = uri.pathname.replace(/^\//, '');
     const secret = uri.searchParams.get('secret');
     const issuer = uri.searchParams.get('issuer');
+    if (!secret?.trim()) {
+        throw new Error('empty secret');
+    }
     return {issuer, account, secret};
 }
 
@@ -162,7 +165,13 @@ ipcMain.on('recorder:init', () => {
     });
 });
 ipcMain.on('qr:read', (_event, payload) => {
-    const totpData = parseQRContent(payload.text);
-    qrWindow.close();
-    mainWindow.webContents.send('qr:parsed', totpData);
+    try {
+        const totpData = parseQRContent(payload.text);
+        mainWindow.webContents.send('qr:parsed', totpData);
+        if (qrWindow) {
+            qrWindow.close();
+        }
+    } catch (error) {
+        console.error(error);
+    }
 });

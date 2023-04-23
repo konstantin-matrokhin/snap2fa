@@ -9,13 +9,18 @@
     function copy() {
         message.set("Copied!");
     }
+
+    function formatCode(code) {
+        let codeMiddle = (code.length / 2) + (code.length % 2);
+        return code.slice(0, codeMiddle) + " " + code.slice(codeMiddle);
+    }
 </script>
 
 <div class="account" on:click={copy}>
     <div class="account__info">
         <div class="account__issuer">{issuer}</div>
         <div class="account__account">{accountName}</div>
-        <div class="account__value">{code}</div>
+        <div class="account__value">{formatCode(code)} ({code})</div>
     </div>
     <div class="account__side">
         <Countdown secondsRemaining=30 />

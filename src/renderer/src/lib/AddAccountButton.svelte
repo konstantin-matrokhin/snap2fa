@@ -1,9 +1,9 @@
 <script>
-  let win;
-  let child;
+    const ipcRenderer = window.electron.ipcRenderer;
 
-  function onClick() {
-  }
+    function onClick() {
+        ipcRenderer.send('qr:open', {});
+    }
 </script>
 
 <button on:click={onClick}>+</button>

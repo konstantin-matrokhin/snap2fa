@@ -9,9 +9,10 @@ let qrWindow;
 function createWindow(): void {
     // Create the browser window.
     const win = new BrowserWindow({
-        width: 900,
-        height: 670,
+        width: 300,
+        height: 600,
         show: false,
+        resizable: false,
         autoHideMenuBar: true,
         title: '2fa',
         ...(process.platform === 'linux' ? {icon} : {}),

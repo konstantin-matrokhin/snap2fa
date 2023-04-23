@@ -13,7 +13,7 @@
             return;
         }
         await navigator.clipboard.writeText(code);
-        message.set("Copied!");
+        message.show("Copied!");
     }
 
     function formatCode(code) {

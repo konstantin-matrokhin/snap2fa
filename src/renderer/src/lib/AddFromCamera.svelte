@@ -6,4 +6,4 @@
     }
 </script>
 
-<button on:click={onClick}>+</button>
+<button on:click={onClick}>Scan QR from camera</button>

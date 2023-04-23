@@ -3,12 +3,16 @@ import {generateCode, validateSecret} from './utils.js'
 
 function createMessage() {
     const { subscribe, set, update } = writable('')
+    let timeoutId;
     return {
         subscribe,
         update,
-        set: (value) => {
-            set(value)
-            setTimeout(() => set(''), 2000)
+        show: (value) => {
+            set(value);
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
+            timeoutId = setTimeout(() => set(''), 2000);
         }
     }
 }
@@ -64,3 +68,5 @@ export const codes = derived([timer, accounts], ([$timer, $accounts]) => {
     })
     return codesMap
 })
+
+export const manualFormOpened = writable(false);

@@ -30,3 +30,7 @@ export function validateSecret(secret) {
     }
     return true;
 }
+
+export function getRandomNumber(minimum, maximum) {
+    return Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
+}

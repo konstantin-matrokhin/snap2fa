@@ -11,7 +11,7 @@
         if (error) {
             message.show(error);
         } else {
-            accounts.add(getRandomNumber(), {issuer, account, secret});
+            accounts.add(getRandomNumber(100, 999), {issuer, account, secret});
             manualFormOpened.set(false);
         }
     }

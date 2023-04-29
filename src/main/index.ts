@@ -2,6 +2,8 @@ import {app, BrowserWindow, desktopCapturer, ipcMain, shell, systemPreferences} 
 import {join} from 'path'
 import {electronApp, is, optimizer} from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import {getAccountsFromGoogleAuth} from "./protobuf-handler";
+import {Account} from "./types/Account";
 
 let mainWindow;
 let qrWindow;
@@ -54,7 +56,7 @@ function createQRReaderWindow() {
             webSecurity: false,
             nodeIntegration: true
         },
-        opacity: .5
+        // opacity: .5
     });
 
     qrWin.on('ready-to-show', () => {
@@ -108,8 +110,6 @@ app.whenReady().then(() => {
 
     createWindow()
 
-    console.log('permission', systemPreferences.getMediaAccessStatus('screen'));
-
     app.on('activate', function () {
         // On macOS it's common to re-create a window in the app when the
         // dock icon is clicked and there are no other windows open.
@@ -131,32 +131,31 @@ app.on('window-all-closed', () => {
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
 
-// format:
+// default format:
 // otpauth://totp/accountName?secret=secretCode&issuer=issuerName
+// google auth format: otpauth-migration://offline?data=...protobufMessage
+async function parseQRContent(content: string): Promise<Account[]> {
+    content = content.trim();
+    const defaultSchema = 'otpauth:';
+    const googleAuthenticatorSchema = 'otpauth-migration:';
+    const url = new URL(content);
 
-function parseQRContent(content: string) {
-    const schema = 'otpauth://totp';
-    if (!content?.startsWith(schema)) {
-        return;
+    if (url.protocol === defaultSchema) {
+        return [parseStandardAuthCode(url)];
+    } else if (url.protocol === googleAuthenticatorSchema) {
+        return await parseGoogleAuthCode(url);
     }
-
-    const uri = new URL(content);
-    const account = uri.pathname.replace(/^\//, '');
-    const secret = uri.searchParams.get('secret');
-    const issuer = uri.searchParams.get('issuer');
-    if (!secret?.trim()) {
-        throw new Error('empty secret');
-    }
-    return {issuer, account, secret};
+    throw new Error('invalid QR content ' + content);
 }
 
 
 ipcMain.on('qr:open', () => {
-    createQRReaderWindow();
+    if (!qrWindow) {
+        createQRReaderWindow();
+    }
 });
 
 ipcMain.on('recorder:init', () => {
-    console.log('recorder:init');
     desktopCapturer.getSources({
         types: ['screen']
     }).then(sources => {
@@ -165,14 +164,35 @@ ipcMain.on('recorder:init', () => {
         }
     });
 });
-ipcMain.on('qr:read', (_event, payload) => {
+ipcMain.on('qr:read', async (_event, payload) => {
+    if (qrWindow) {
+        qrWindow.close();
+    }
     try {
-        const totpData = parseQRContent(payload.text);
-        mainWindow.webContents.send('qr:parsed', totpData);
-        if (qrWindow) {
-            qrWindow.close();
-        }
+        const totpData = await parseQRContent(payload.text);
+        const jsonData = JSON.stringify(totpData);
+        mainWindow.webContents.send('qr:parsed', jsonData);
     } catch (error) {
         console.error(error);
     }
 });
+
+function parseStandardAuthCode(url: URL): Account {
+    const account = url.pathname.replace(/^\//, '');
+    const secret = url.searchParams.get('secret');
+    const issuer = url.searchParams.get('issuer') || '';
+    if (!secret?.trim()) {
+        throw new Error('empty secret');
+    }
+    return {issuer, account, secret};
+}
+
+async function parseGoogleAuthCode(url: URL): Promise<Account[]> {
+// ipcMain.on('qr:parse-proto', async (_event, payload) => {
+    // const str = "CjQKFMREUB7hkE6lUgSVk2dg5l6Vbte5Egtrb3RlYmFsdnJvdBoJSW5zdGFncmFtIAEoATACChYKCneHdGtNPeefH38SAnZrIAEoATACClgKDvdsjCcTXFZr1rJHKdSaEi9CbG9ja2NoYWluOjEzOGEyMTE4LTMyOTctNDczOC04OWQwLWJiNWYzYmY5ZGRiMxoPYmxvY2tjaGFpbi5pbmZvIAEoATACCkYKFFPH+tD7t7j/8lEynKdm+02nd8D6EiBrb25zdGFudGluLm1hdHJva2hpbkBiZXRvb2xhLmNvbRoGR29vZ2xlIAEoATACCjkKFBqpzghZs5icJUWqwUprHJajyzHvEhFrb25zdGFudGluLnNlbHNreRoIRmFjZWJvb2sgASgBMAIKJgoKf2QXRBzkUinI6BIKa21hdHJva2hpbhoGR2l0SHViIAEoATACCjoKFENDYnBKa2F3Q3RoUHdKVWpOSnNjEhRrb25zdGFudGluLm1hdHJva2hpbhoGTW9uZWZmIAEoATACCjAKCkh/RmkbWitROCQSEkJpdGZpbmV4LTExLTgtMjAyMhoIQml0ZmluZXggASgBMAIKPwoKkWNwcqz6qv0uHRIea29uc3RhbnRpbi5tYXRyb2toaW5AZ21haWwuY29tGgtCaW5hbmNlLmNvbSABKAEwAgpHChT+kI2/hxW0pmaO8RE2Y1lT+TpWVxIha29uc3RhbnRpbi5tYXRyb2toaW5Ac3Bpa2VhcHAuY29tGgZHb29nbGUgASgBMAIQARgBIAA=";
+    const protobufMessage = url.searchParams.get('data')!;
+    const otpBuffer = Buffer.from(protobufMessage, 'base64');
+    return await getAccountsFromGoogleAuth(otpBuffer);
+    // mainWindow.webContents.send('qr:import-proto-accounts', accounts);
+// });
+}

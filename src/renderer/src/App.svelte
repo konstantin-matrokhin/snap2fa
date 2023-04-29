@@ -7,6 +7,8 @@
     import AddManually from "./lib/AddManually.svelte";
     import ManualForm from "./lib/ManualForm.svelte";
     import {getRandomNumber} from "./utils";
+    import ImportAccounts from "./lib/ImportAccounts.svelte";
+    import ExportAccounts from "./lib/ExportAccounts.svelte";
 
     onMount(() => {
         accounts.loadAccounts();
@@ -15,11 +17,16 @@
     const ipcRenderer = window.electron.ipcRenderer;
 
     ipcRenderer.on('qr:parsed', (event, payload) => {
-        const {issuer, account, secret} = payload;
+        const parsedAccounts = JSON.parse(payload);
+        console.log(parsedAccounts)
         const maximum = 999;
         const minimum = 100;
+
         const randomNumber = getRandomNumber(minimum, maximum);
-        accounts.add(randomNumber, {issuer, account, secret});
+        for (let i = 0; i < parsedAccounts.length; i++) {
+            const {issuer, account, secret} = parsedAccounts[i];
+            accounts.add(randomNumber + i, {issuer, account, secret});
+        }
     })
 </script>
 
@@ -28,6 +35,10 @@
         <AddAccountButton/>
         <AddFromDesktop/>
         <AddManually/>
+    </div>
+    <div class="group">
+        <ImportAccounts/>
+        <ExportAccounts/>
     </div>
     {#if $manualFormOpened}
         <ManualForm/>

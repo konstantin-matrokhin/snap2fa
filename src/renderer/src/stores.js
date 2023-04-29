@@ -33,6 +33,7 @@ function createAccounts() {
             return set(new Map(Object.entries(accounts)));
         },
         add: (id, account) => {
+            console.log(id, account)
             if (!validateSecret(account.secret)) {
                 return;
             }

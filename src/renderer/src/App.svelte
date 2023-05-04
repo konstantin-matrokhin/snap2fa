@@ -9,6 +9,9 @@
     import {getRandomNumber} from "./lib/utils";
     import ImportAccounts from "./components/ImportAccounts.svelte";
     import ExportAccounts from "./components/ExportAccounts.svelte";
+    import AddFromCamera from "./components/AddFromCamera.svelte";
+    import CameraScan from "./components/CameraScan.svelte";
+    import {cameraScanIsOpened} from "./lib/stores";
 
     onMount(() => {
         accounts.loadAccounts();
@@ -33,7 +36,7 @@
 <main class="container">
     <div class="group">
         <AddAccountButton/>
-        <AddFromDesktop/>
+        <AddFromCamera/>
         <AddManually/>
     </div>
     <div class="group">
@@ -42,6 +45,9 @@
     </div>
     {#if $manualFormOpened}
         <ManualForm/>
+    {/if}
+    {#if $cameraScanIsOpened}
+        <CameraScan/>
     {/if}
     <Codes/>
 </main>

@@ -71,3 +71,4 @@ export const codes = derived([timer, accounts], ([$timer, $accounts]) => {
 })
 
 export const manualFormOpened = writable(false);
+export const cameraScanIsOpened = writable(false);

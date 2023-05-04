@@ -1,8 +1,10 @@
 <script>
+    import {cameraScanIsOpened} from "../lib/stores";
+
     const ipcRenderer = window.electron.ipcRenderer;
 
     function onClick() {
-        ipcRenderer.send('qr:open', {});
+        cameraScanIsOpened.set(!$cameraScanIsOpened);
     }
 </script>
 

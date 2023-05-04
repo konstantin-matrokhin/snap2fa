@@ -1,5 +1,5 @@
 <script>
-    import {manualFormOpened} from "../stores";
+    import {manualFormOpened} from "../lib/stores";
 
     function onClick() {
         manualFormOpened.set(!$manualFormOpened);

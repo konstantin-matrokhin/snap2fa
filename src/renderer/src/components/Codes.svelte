@@ -1,7 +1,7 @@
 <script>
     import Message from "./Message.svelte";
     import Code from "./code/Code.svelte";
-    import {accounts, codes, message} from "../stores.js";
+    import {accounts, codes, message} from "../lib/stores.js";
 </script>
 
 <div class="code-list">

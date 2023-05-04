@@ -27,6 +27,7 @@ export class AppContainer {
             return {action: 'deny'};
         })
 
+        this._mainWindow = _mainWindow;
         return _mainWindow;
     }
 
@@ -43,7 +44,7 @@ export class AppContainer {
         _qrWindow.on('closed', () => {
             this._qrWindow = undefined;
         })
-        //
+
         _qrWindow.on('close', () => {
             this._qrWindow = undefined;
         })
@@ -52,6 +53,7 @@ export class AppContainer {
             _qrWindow?.webContents.send('window:position', this.getQRWinPosition());
         })
 
+        this._qrWindow = _qrWindow;
         return _qrWindow;
     }
 

@@ -1,14 +1,14 @@
 <script>
-    import Codes from './lib/Codes.svelte'
-    import AddAccountButton from "./lib/AddFromDesktop.svelte";
-    import {accounts, manualFormOpened} from "./stores.js";
+    import Codes from './components/Codes.svelte'
+    import AddAccountButton from "./components/AddFromDesktop.svelte";
+    import {accounts, manualFormOpened} from "./lib/stores.js";
     import {onMount} from "svelte";
-    import AddFromDesktop from "./lib/AddFromDesktop.svelte";
-    import AddManually from "./lib/AddManually.svelte";
-    import ManualForm from "./lib/ManualForm.svelte";
-    import {getRandomNumber} from "./utils";
-    import ImportAccounts from "./lib/ImportAccounts.svelte";
-    import ExportAccounts from "./lib/ExportAccounts.svelte";
+    import AddFromDesktop from "./components/AddFromDesktop.svelte";
+    import AddManually from "./components/AddManually.svelte";
+    import ManualForm from "./components/ManualForm.svelte";
+    import {getRandomNumber} from "./lib/utils";
+    import ImportAccounts from "./components/ImportAccounts.svelte";
+    import ExportAccounts from "./components/ExportAccounts.svelte";
 
     onMount(() => {
         accounts.loadAccounts();

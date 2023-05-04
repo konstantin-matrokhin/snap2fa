@@ -1,7 +1,7 @@
 <script>
-    import {accounts, message} from "../../stores.js";
+    import {accounts, message} from "../../lib/stores.js";
     import Countdown from "./Countdown.svelte";
-    import {INVALID_SECRET_CODE_TEXT} from "../../utils";
+    import {INVALID_SECRET_CODE_TEXT} from "../../lib/utils";
 
     export let id;
     export let issuer;

@@ -1,6 +1,6 @@
 <script>
-    import {accounts, manualFormOpened, message} from "../stores";
-    import {getRandomNumber, validateSecret} from "../utils";
+    import {accounts, manualFormOpened, message} from "../lib/stores";
+    import {getRandomNumber, validateSecret} from "../lib/utils";
 
     let issuer = '';
     let account = '';

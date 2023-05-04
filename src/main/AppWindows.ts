@@ -40,6 +40,8 @@ export class AppWindows {
             width: 300,
             height: 300,
             title: 'QR Reader',
+            alwaysOnTop: true,
+            opacity: .5,
             webPreferences: {
                 sandbox: false,
                 preload: join(__dirname, '../preload/index.js'),

@@ -42,6 +42,7 @@
     function scanQR(stream) {
         const codeReader = new BrowserQRCodeReader();
         codeReader.decodeFromStream(stream, undefined, result => {
+            console.log(result)
             if (result) {
                 ipcRenderer.send('qr:read', result);
             }
@@ -54,6 +55,7 @@
 </script>
 
 <main class="container">
+    11231312312
 </main>
 
 <style>

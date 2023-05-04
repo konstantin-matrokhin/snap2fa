@@ -48,9 +48,8 @@ ipcMain.on('recorder:init', () => {
             types: ['screen']
         })
         .then((sources) => {
-            if (appContainer.qrWindow) {
-                appContainer.qrWindow.webContents.send('recorder:sources', sources)
-            }
+            console.log(appContainer.qrWindow)
+            appContainer.qrWindow?.webContents.send('recorder:sources', sources)
         });
 });
 

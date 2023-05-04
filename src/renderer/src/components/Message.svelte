@@ -1,5 +1,5 @@
 <script>
-    import {message} from "../stores.js"
+    import {message} from "../lib/stores.js"
 </script>
 
 <div class="message">{$message}</div>

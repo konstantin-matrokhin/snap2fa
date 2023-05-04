@@ -6,28 +6,33 @@ import icon from '../../resources/icon.png?asset'
 export class AppWindows {
     public createMainWindow(): BrowserWindow {
         const mainWindow = new BrowserWindow({
+            backgroundColor: '#2f2f2f',
+            minimizable: false,
+            maximizable: false,
             width: 300,
             height: 600,
-            show: false,
             resizable: false,
-            autoHideMenuBar: true,
-            title: '2fa',
+            alwaysOnTop: true,
             ...(process.platform === 'linux' ? { icon } : {}),
             webPreferences: {
                 preload: join(__dirname, '../preload/index.js'),
                 sandbox: false,
                 nodeIntegration: true
             }
-        })
+        });
+        // mainWindow.setMenu(null);
+        // mainWindow.webContents.on('did-finish-load', () => {
+        //     mainWindow.webContents.setVisualZoomLevelLimits(1, 1)
+        // })
         // HMR for renderer base on electron-vite cli.
         // Load the remote URL for development or the local html file for production.
         if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-            mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
+            mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL']);
         } else {
-            mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+            mainWindow.loadFile(join(__dirname, '../renderer/index.html'));
         }
 
-        return mainWindow
+        return mainWindow;
     }
 
     public createQRReaderWindow(): BrowserWindow {
@@ -41,14 +46,14 @@ export class AppWindows {
                 webSecurity: false,
                 nodeIntegration: true
             }
-        })
+        });
 
         if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-            qrWin.loadURL(process.env['ELECTRON_RENDERER_URL'] + '/index2.html')
+            qrWin.loadURL(process.env['ELECTRON_RENDERER_URL'] + '/index2.html');
         } else {
-            qrWin.loadFile(join(__dirname, '../renderer/index2.html'))
+            qrWin.loadFile(join(__dirname, '../renderer/index2.html'));
         }
 
-        return qrWin
+        return qrWin;
     }
 }

@@ -1,4 +1,4 @@
-import {Account} from "./types/Account";
+import {Account} from "./Account";
 import {ProtobufHandler} from "./ProtobufHandler";
 import base32 from "hi-base32";
 
@@ -6,28 +6,28 @@ export class QRHandler {
     protobufHandler = new ProtobufHandler();
 
     public async parseQRContent(content: string): Promise<Account[]> {
-        content = content.trim()
-        const defaultSchema = 'otpauth:'
-        const googleAuthenticatorSchema = 'otpauth-migration:'
+        content = content.trim();
+        const defaultSchema = 'otpauth:';
+        const googleAuthenticatorSchema = 'otpauth-migration:';
         const url = new URL(content)
 
         if (url.protocol === defaultSchema) {
-            return [this.parseStandardAuthCode(url)]
+            return [this.parseStandardAuthCode(url)];
         } else if (url.protocol === googleAuthenticatorSchema) {
-            return await this.parseGoogleAuthCode(url)
+            return await this.parseGoogleAuthCode(url);
         }
-        throw new Error('invalid QR content ' + content)
+        throw new Error('invalid QR content ' + content);
     }
 
 
     private parseStandardAuthCode(url: URL): Account {
-        const account = url.pathname.replace(/^\//, '')
-        const secret = url.searchParams.get('secret')
-        const issuer = url.searchParams.get('issuer') || ''
+        const account = url.pathname.replace(/^\//, '');
+        const secret = url.searchParams.get('secret');
+        const issuer = url.searchParams.get('issuer') || '';
         if (!secret?.trim()) {
-            throw new Error('empty secret')
+            throw new Error('empty secret');
         }
-        return {issuer, account, secret}
+        return {issuer, account, secret};
     }
 
     private async getAccountsFromGoogleAuth(otpBuffer: Buffer): Promise<Account[]> {

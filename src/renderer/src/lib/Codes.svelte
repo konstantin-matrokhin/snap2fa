@@ -15,11 +15,14 @@
 </div>
 
 <style lang="scss">
-  .code-list {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    justify-content: start;
-    align-items: stretch;
-  }
+    .code-list {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: start;
+        align-items: stretch;
+        height: 100%;
+        overflow-y: auto;
+        padding: 20px 0 40px;
+    }
 </style>

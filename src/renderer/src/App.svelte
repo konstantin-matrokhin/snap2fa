@@ -54,6 +54,8 @@
         flex-direction: column;
         justify-content: start;
         align-content: start;
+        width: 100vw;
+        height: 100vh;
     }
 
     .group {

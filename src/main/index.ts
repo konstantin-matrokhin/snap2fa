@@ -67,7 +67,7 @@ ipcMain.on('qr:read-file', async () => {
     const dialogResult = await dialog.showOpenDialog({
         properties: ['openFile', 'multiSelections'],
         filters: [
-            {name: 'Images', extensions: ['jpg', 'png', 'gif']},
+            {name: 'Images', extensions: ['jpg', 'jpeg', 'png', 'gif']},
         ]
     });
     if (dialogResult.canceled || dialogResult.filePaths.length === 0) {

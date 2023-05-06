@@ -1,7 +1,8 @@
-import {app, desktopCapturer, dialog, ipcMain} from 'electron'
+import {app, desktopCapturer, dialog, ipcMain, Menu, Tray} from 'electron'
 import {electronApp, optimizer} from '@electron-toolkit/utils'
 import {QRHandler} from './QRHandler'
 import {AppContainer} from "./AppContainer";
+import {join} from "path";
 
 const qrHandler = new QRHandler();
 const appContainer = new AppContainer();
@@ -12,12 +13,9 @@ app.on('before-quit', () => {
 })
 
 app.whenReady().then(() => {
-    // Set app user model id for windows
+    setMainMenu();
     electronApp.setAppUserModelId('kz.kmatrokhin');
 
-    // Default open or close DevTools by F12 in development
-    // and ignore CommandOrControl + R in production.
-    // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
     appContainer.initMainWindow();
 })
 
@@ -43,6 +41,18 @@ ipcMain.on('qr:open', () => {
 })
 
 ipcMain.on('recorder:init', () => {
+    sendScreenRecordingSources();
+});
+
+ipcMain.on('qr:read', async (_event, payload) => {
+    handleQRIsRead(payload.text);
+})
+
+ipcMain.on('qr:read-file', async () => {
+    selectImageFiles();
+});
+
+function sendScreenRecordingSources() {
     desktopCapturer
         .getSources({
             types: ['screen']
@@ -50,20 +60,20 @@ ipcMain.on('recorder:init', () => {
         .then((sources) => {
             appContainer.qrWindow?.webContents.send('recorder:sources', sources)
         });
-});
+}
 
-ipcMain.on('qr:read', async (_event, payload) => {
+async function handleQRIsRead(qrContent: string): Promise<void> {
     appContainer.qrWindow?.close();
     try {
-        const totpData = await qrHandler.parseQRContent(payload.text);
+        const totpData = await qrHandler.parseQRContent(qrContent);
         const jsonData = JSON.stringify(totpData);
         appContainer.mainWindow.webContents.send('qr:parsed', jsonData);
     } catch (error) {
         console.error(error);
     }
-})
+}
 
-ipcMain.on('qr:read-file', async () => {
+async function selectImageFiles() {
     const dialogResult = await dialog.showOpenDialog({
         properties: ['openFile', 'multiSelections'],
         filters: [
@@ -77,5 +87,24 @@ ipcMain.on('qr:read-file', async () => {
     const accounts = await qrHandler.parseFromFiles(dialogResult.filePaths);
     const jsonData = JSON.stringify(accounts);
     appContainer.mainWindow.webContents.send('qr:parsed', jsonData);
-});
+}
+
+function setMainMenu() {
+    const tray = new Tray(join(__dirname, '../../resources/tray-icon.png'));
+    const contextMenu = Menu.buildFromTemplate([
+        {
+            label: 'Exit',
+            click: () => {
+                app.quit();
+            }
+        },
+    ])
+    tray.on('click', () => {
+        appContainer.mainWindow.show();
+    })
+    tray.on('right-click', () => {
+        tray.popUpContextMenu(contextMenu);
+    })
+    tray.setToolTip('Snap2FA');
+}
 

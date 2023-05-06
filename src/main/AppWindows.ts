@@ -12,7 +12,7 @@ export class AppWindows {
             width: 300,
             height: 600,
             resizable: false,
-            alwaysOnTop: true,
+            alwaysOnTop: false,
             titleBarStyle: 'hiddenInset',
             frame: false,
             ...(process.platform === 'linux' ? { icon } : {}),
@@ -22,10 +22,6 @@ export class AppWindows {
                 nodeIntegration: true
             }
         });
-        // mainWindow.setMenu(null);
-        // mainWindow.webContents.on('did-finish-load', () => {
-        //     mainWindow.webContents.setVisualZoomLevelLimits(1, 1)
-        // })
         // HMR for renderer base on electron-vite cli.
         // Load the remote URL for development or the local html file for production.
         if (is.dev && process.env['ELECTRON_RENDERER_URL']) {

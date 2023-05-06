@@ -1,6 +1,7 @@
 import type {BrowserWindow} from "electron";
 import {shell} from "electron";
 import {AppWindows} from "./AppWindows";
+import {is} from "@electron-toolkit/utils";
 
 export class AppContainer {
     private _appWindows = new AppWindows();
@@ -14,7 +15,9 @@ export class AppContainer {
         }
         let _mainWindow = this._appWindows.createMainWindow();
         _mainWindow.on('ready-to-show', () => {
-            _mainWindow.webContents.openDevTools();
+            if (is.dev) {
+                _mainWindow.webContents.openDevTools();
+            }
         });
         _mainWindow.on('close', (e) => {
             if (!this._isQuitting) {

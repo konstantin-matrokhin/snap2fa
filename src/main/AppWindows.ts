@@ -13,6 +13,8 @@ export class AppWindows {
             height: 600,
             resizable: false,
             alwaysOnTop: true,
+            titleBarStyle: 'hiddenInset',
+            frame: false,
             ...(process.platform === 'linux' ? { icon } : {}),
             webPreferences: {
                 preload: join(__dirname, '../preload/index.js'),
@@ -39,7 +41,6 @@ export class AppWindows {
         const qrWin = new BrowserWindow({
             width: 300,
             height: 300,
-            title: 'QR Reader',
             alwaysOnTop: true,
             opacity: .5,
             webPreferences: {

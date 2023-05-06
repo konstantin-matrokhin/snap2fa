@@ -3,7 +3,6 @@
     import AddAccountButton from "./components/AddFromDesktop.svelte";
     import {accounts, manualFormOpened} from "./lib/stores.js";
     import {onMount} from "svelte";
-    import AddFromDesktop from "./components/AddFromDesktop.svelte";
     import AddManually from "./components/AddManually.svelte";
     import ManualForm from "./components/ManualForm.svelte";
     import {getRandomNumber} from "./lib/utils";
@@ -12,6 +11,7 @@
     import AddFromCamera from "./components/AddFromCamera.svelte";
     import CameraScan from "./components/CameraScan.svelte";
     import {cameraScanIsOpened} from "./lib/stores";
+    import AddFromImage from "./components/AddFromImage.svelte";
 
     onMount(() => {
         accounts.loadAccounts();
@@ -33,11 +33,13 @@
     })
 </script>
 
+<div class="title-bar"></div>
 <main class="container">
     <div class="group">
         <AddAccountButton/>
         <AddFromCamera/>
         <AddManually/>
+        <AddFromImage/>
     </div>
     <div class="group">
         <ImportAccounts/>
@@ -53,9 +55,16 @@
 </main>
 
 <style>
+    .title-bar {
+        -webkit-app-select: none;
+        -webkit-app-region: drag;
+        width: 100%;
+        height: 32px;
+    }
+
     .container {
         margin: 0;
-        padding: 0;
+        padding: 10px 0 0 0;
         display: flex;
         flex-direction: column;
         justify-content: start;

@@ -10,12 +10,10 @@
     let isScanning = false;
 
     async function init() {
-        // ipcRenderer.send('qr:open', {});
         let devices = await navigator.mediaDevices.enumerateDevices();
-        for (let index = 0; index < devices.length; index++) {
-            const device = devices[index];
+        for (let i = 0; i < devices.length; i++) {
+            const device = devices[i];
             if (device.kind === "videoinput") {
-                //Add the video device because it is a videoDevice. Manually create a new object with device details instead of passing device.
                 videoDevices = [...videoDevices, {
                     deviceId: device.deviceId,
                     kind: device.kind,

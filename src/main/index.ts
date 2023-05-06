@@ -1,4 +1,4 @@
-import {app, desktopCapturer, ipcMain} from 'electron'
+import {app, desktopCapturer, dialog, ipcMain} from 'electron'
 import {electronApp, optimizer} from '@electron-toolkit/utils'
 import {QRHandler} from './QRHandler'
 import {AppContainer} from "./AppContainer";
@@ -48,7 +48,6 @@ ipcMain.on('recorder:init', () => {
             types: ['screen']
         })
         .then((sources) => {
-            console.log(appContainer.qrWindow)
             appContainer.qrWindow?.webContents.send('recorder:sources', sources)
         });
 });
@@ -63,3 +62,20 @@ ipcMain.on('qr:read', async (_event, payload) => {
         console.error(error);
     }
 })
+
+ipcMain.on('qr:read-file', async () => {
+    const dialogResult = await dialog.showOpenDialog({
+        properties: ['openFile', 'multiSelections'],
+        filters: [
+            {name: 'Images', extensions: ['jpg', 'png', 'gif']},
+        ]
+    });
+    if (dialogResult.canceled || dialogResult.filePaths.length === 0) {
+        return;
+    }
+
+    const accounts = await qrHandler.parseFromFiles(dialogResult.filePaths);
+    const jsonData = JSON.stringify(accounts);
+    appContainer.mainWindow.webContents.send('qr:parsed', jsonData);
+});
+

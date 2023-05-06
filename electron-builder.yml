@@ -1,5 +1,5 @@
-appId: ru.twofa-electron
-productName: twofa-electron
+appId: kz.snap2fa
+productName: Snap2FA
 directories:
   buildResources: build
 files:
@@ -13,7 +13,7 @@ asarUnpack:
   - resources/**
 afterSign: build/notarize.js
 win:
-  executableName: twofa-electron
+  executableName: Snap2FA
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
@@ -33,7 +33,7 @@ linux:
     - AppImage
     - snap
     - deb
-  maintainer: electronjs.org
+  maintainer: matrokh.in
   category: Utility
 appImage:
   artifactName: ${name}-${version}.${ext}

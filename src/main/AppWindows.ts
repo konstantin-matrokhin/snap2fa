@@ -6,6 +6,7 @@ import icon from '../../resources/icon.png?asset'
 export class AppWindows {
     public createMainWindow(): BrowserWindow {
         const mainWindow = new BrowserWindow({
+            title: 'Snap2FA',
             backgroundColor: '#F9F9F9',
             minimizable: false,
             maximizable: false,
@@ -35,6 +36,7 @@ export class AppWindows {
 
     public createQRReaderWindow(): BrowserWindow {
         const qrWin = new BrowserWindow({
+            title: 'Snap2FA',
             width: 300,
             height: 300,
             alwaysOnTop: true,

@@ -108,3 +108,16 @@ function setMainMenu() {
     tray.setToolTip('Snap2FA');
 }
 
+app.setName("Snap2FA");
+app.setAboutPanelOptions({
+    applicationName: "Snap2FA",
+    applicationVersion: "0.0.1 alpha",
+    version: "build 1",
+    credits: "dev: Konstantin Matrokhin\ndesign: Dmytro Antonenko",
+    authors: [
+        "Konstantin Matrokhin",
+        "Dmytro Antonenko"
+    ],
+    website: "https://matrokh.in",
+    copyright: "2023"
+});

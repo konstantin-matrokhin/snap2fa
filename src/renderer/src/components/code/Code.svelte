@@ -8,12 +8,18 @@
     export let accountName;
     export let code;
 
+
+    let isCopied = false;
+
     async function copy() {
         if (!isValidSecret()) {
             return;
         }
+        isCopied = true;
+        setTimeout(() => {
+            isCopied = false;
+        }, 1500);
         await navigator.clipboard.writeText(code);
-        message.show("Copied!");
     }
 
     function formatCode(code) {
@@ -31,6 +37,20 @@
             accounts.remove(id);
         }
     }
+
+    function computeText(isCopied, isValidSecret) {
+        console.log('compute')
+        if (isCopied) {
+            return 'COPIED';
+        }
+        if (isValidSecret) {
+            return formatCode(code)
+        } else {
+            return INVALID_SECRET_CODE_TEXT
+        }
+    }
+
+    $: codeText = computeText(isCopied, isValidSecret())
 </script>
 
 <div class="account" on:click={copy} on:contextmenu={askDelete}>
@@ -46,7 +66,7 @@
                 {accountName}
             </div>
         </div>
-        <div class="account__code">{isValidSecret() ? formatCode(code) : INVALID_SECRET_CODE_TEXT}</div>
+        <div class="account__code">{codeText}</div>
     </div>
 </div>
 

@@ -49,7 +49,7 @@ ipcMain.on('qr:read', async (_event, payload) => {
 })
 
 ipcMain.on('qr:read-file', async () => {
-    selectImageFiles();
+    parseSelectedImageFiles();
 });
 
 function sendScreenRecordingSources() {
@@ -73,7 +73,7 @@ async function handleQRIsRead(qrContent: string): Promise<void> {
     }
 }
 
-async function selectImageFiles() {
+async function parseSelectedImageFiles() {
     const dialogResult = await dialog.showOpenDialog({
         properties: ['openFile', 'multiSelections'],
         filters: [

@@ -38,7 +38,7 @@
         }
     }
 
-    function computeText(isCopied, isValidSecret) {
+    function computeText(code, isCopied, isValidSecret) {
         console.log('compute')
         if (isCopied) {
             return 'COPIED';
@@ -50,7 +50,7 @@
         }
     }
 
-    $: codeText = computeText(isCopied, isValidSecret())
+    $: codeText = computeText(code, isCopied, isValidSecret())
 </script>
 
 <div class="account" on:click={copy} on:contextmenu={askDelete}>

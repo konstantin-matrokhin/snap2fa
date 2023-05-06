@@ -10,8 +10,11 @@
     import ExportAccounts from "./components/ExportAccounts.svelte";
     import AddFromCamera from "./components/AddFromCamera.svelte";
     import CameraScan from "./components/CameraScan.svelte";
-    import {cameraScanIsOpened} from "./lib/stores";
+    import {cameraScanIsOpened, uglyMenuIsShown} from "./lib/stores";
     import AddFromImage from "./components/AddFromImage.svelte";
+    import Searchbar from "./components/Searchbar.svelte";
+    import SettingButton from "./components/SettingsButton.svelte";
+    import AddButton from "./components/AddButton.svelte";
 
     onMount(() => {
         accounts.loadAccounts();
@@ -35,16 +38,23 @@
 
 <div class="title-bar"></div>
 <main class="container">
-    <div class="group">
-        <AddAccountButton/>
-        <AddFromCamera/>
-        <AddManually/>
-        <AddFromImage/>
+    <div class="top-menu">
+        <Searchbar/>
+        <SettingButton/>
+        <AddButton/>
     </div>
-    <div class="group">
-        <ImportAccounts/>
-        <ExportAccounts/>
-    </div>
+    {#if $uglyMenuIsShown}
+        <div class="group">
+            <AddAccountButton/>
+            <AddFromCamera/>
+            <AddManually/>
+            <AddFromImage/>
+        </div>
+        <div class="group">
+            <ImportAccounts/>
+            <ExportAccounts/>
+        </div>
+    {/if}
     {#if $manualFormOpened}
         <ManualForm/>
     {/if}
@@ -59,7 +69,15 @@
         -webkit-app-select: none;
         -webkit-app-region: drag;
         width: 100%;
-        height: 32px;
+        height: 25px;
+    }
+
+    .top-menu {
+        padding: 20px;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
     }
 
     .container {

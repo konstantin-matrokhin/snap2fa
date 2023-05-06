@@ -23,6 +23,6 @@
         align-items: stretch;
         height: 100%;
         overflow-y: auto;
-        padding: 20px 0 40px;
+        padding: 7px 20px;
     }
 </style>

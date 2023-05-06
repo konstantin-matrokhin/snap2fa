@@ -6,11 +6,11 @@ import icon from '../../resources/icon.png?asset'
 export class AppWindows {
     public createMainWindow(): BrowserWindow {
         const mainWindow = new BrowserWindow({
-            backgroundColor: '#2f2f2f',
+            backgroundColor: '#F9F9F9',
             minimizable: false,
             maximizable: false,
-            width: 300,
-            height: 600,
+            width: 375,
+            height: 700,
             resizable: false,
             alwaysOnTop: false,
             titleBarStyle: 'hiddenInset',

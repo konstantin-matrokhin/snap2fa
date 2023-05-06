@@ -18,7 +18,7 @@
 
     function formatCode(code) {
         let codeMiddle = (code.length / 2) + (code.length % 2);
-        return code.slice(0, codeMiddle) + " " + code.slice(codeMiddle);
+        return code.slice(0, codeMiddle) + "-" + code.slice(codeMiddle);
     }
 
     function isValidSecret() {
@@ -36,13 +36,17 @@
 <div class="account" on:click={copy} on:contextmenu={askDelete}>
     <div class="account__info">
         <div class="account__issuer">{issuer}</div>
-        <div class="account__account">{accountName}</div>
-        <div class="account__value">{isValidSecret() ? formatCode(code) : INVALID_SECRET_CODE_TEXT}</div>
-    </div>
-    <div class="account__side">
-        {#if isValidSecret() }
-            <Countdown/>
-        {/if}
+        <div class="account__side">
+            {#if isValidSecret() }
+                <Countdown/>
+            {/if}
+        </div>
+        <div class="account__account">
+            <div class="account__account-text">
+                {accountName}
+            </div>
+        </div>
+        <div class="account__code">{isValidSecret() ? formatCode(code) : INVALID_SECRET_CODE_TEXT}</div>
     </div>
 </div>
 
@@ -50,26 +54,64 @@
     .account {
         display: flex;
         flex-direction: row;
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
         justify-content: start;
         align-items: start;
         margin: 5px 0;
-        color: #f6f6f6;
-        background-color: lightslategray;
+        color: #000;
         font-size: 18px;
-        padding: 5px;
+        padding: 16px;
         cursor: pointer;
+        border: 1px solid #181818;
+        border-radius: 12px;
+
         pointer-events: bounding-box;
         -webkit-user-select: none;
 
+        &:nth-child(odd) {
+            background-color: #E8A6FE;
+        }
+
+        &:nth-child(even) {
+            background-color: #9E9BFF;
+        }
+
         &__info {
             display: flex;
-            flex-direction: column;
-            flex-wrap: nowrap;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        &__issuer {
+            font-weight: 500;
+            font-size: 24px;
+            line-height: 32px;
+        }
+
+        &__account {
+            font-weight: 400;
+            font-size: 18px;
+            line-height: 28px;
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        &__account-text {
+            white-space: pre;
+            overflow: hidden;
+            width: 250px;
+            text-overflow: ellipsis;
+            height: 34px;
+        }
+
+        &__code {
+            font-weight: 500;
+            font-size: 36px;
+            line-height: 40px;
         }
 
         &__side {
-            margin-left: auto;
+            margin-left: auto
         }
     }
 </style>

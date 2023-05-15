@@ -12,7 +12,7 @@
         width: 219px;
         height: 38px;
         padding: 9px 13px;
-        background: #F9F9F9;
+        background: #454545;
         border: 1px solid #181818;
         border-radius: 6px;
 
@@ -42,7 +42,7 @@
 
                 /* Gray/500 */
 
-                color: #8C8C8C;
+                color: #C5C5C5;
             }
         }
     }

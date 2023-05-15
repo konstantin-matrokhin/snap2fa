@@ -39,7 +39,6 @@
     }
 
     function computeText(code, isCopied, isValidSecret) {
-        console.log('compute')
         if (isCopied) {
             return 'COPIED';
         }
@@ -89,11 +88,11 @@
         -webkit-user-select: none;
 
         &:nth-child(odd) {
-            background-color: #E8A6FE;
+            background: linear-gradient(117.6deg, #9E9BFF 35.77%, #FFFFFF 124.24%);
         }
 
         &:nth-child(even) {
-            background-color: #9E9BFF;
+            background: linear-gradient(117.6deg, #E8A6FE 35.77%, #FFFFFF 124.24%);
         }
 
         &__info {

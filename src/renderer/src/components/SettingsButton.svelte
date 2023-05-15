@@ -5,15 +5,9 @@
         padding: 9px;
         width: 38px;
         height: 38px;
-
-        /* Gray/50 */
-
         background: #F9F9F9;
-        /* State/500 */
-
         border: 1px solid #181818;
         border-radius: 6px;
-        margin-left: 24px;
     }
 
     .icon-settings {

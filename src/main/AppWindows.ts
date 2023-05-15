@@ -7,10 +7,10 @@ export class AppWindows {
     public createMainWindow(): BrowserWindow {
         const mainWindow = new BrowserWindow({
             title: 'Snap2FA',
-            backgroundColor: '#F9F9F9',
+            backgroundColor: '#0E0E0E',
             minimizable: false,
             maximizable: false,
-            width: 375,
+            width: 325,
             height: 700,
             resizable: false,
             alwaysOnTop: false,
@@ -41,7 +41,7 @@ export class AppWindows {
             height: 300,
             alwaysOnTop: true,
             opacity: .5,
-            webPreferences: {
+            webPreferences: { 
                 sandbox: false,
                 preload: join(__dirname, '../preload/index.js'),
                 webSecurity: false,

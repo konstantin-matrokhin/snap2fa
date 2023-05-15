@@ -1,5 +1,5 @@
 {
-  "name": "Snap2FA",
+  "name": "snap2fa",
   "version": "0.0.1",
   "description": "2FA TOTP app",
   "main": "./out/main/index.js",

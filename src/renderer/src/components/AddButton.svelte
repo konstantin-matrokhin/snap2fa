@@ -1,8 +1,9 @@
 <script>
-    import {uglyMenuIsShown} from "../lib/stores";
+    import {page, uglyMenuIsShown} from "../lib/stores";
+    import {PAGE_ADD} from "../lib/pages";
 
     function onClick() {
-        uglyMenuIsShown.set(!$uglyMenuIsShown);
+        page.set(PAGE_ADD);
     }
 </script>
 
@@ -10,6 +11,9 @@
 
 <style lang="scss">
     .add-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 38px;
         height: 38px;
         background: #E8A6FE;

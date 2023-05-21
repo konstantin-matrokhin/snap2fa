@@ -1,20 +1,11 @@
 <script>
-    import Codes from './components/Codes.svelte'
-    import AddAccountButton from "./components/AddFromDesktop.svelte";
-    import {accounts, manualFormOpened} from "./lib/stores.js";
+    import {accounts} from "./lib/stores.js";
     import {onMount} from "svelte";
-    import AddManually from "./components/AddManually.svelte";
-    import ManualForm from "./components/ManualForm.svelte";
     import {getRandomNumber} from "./lib/utils";
-    import ImportAccounts from "./components/ImportAccounts.svelte";
-    import ExportAccounts from "./components/ExportAccounts.svelte";
-    import AddFromCamera from "./components/AddFromCamera.svelte";
-    import CameraScan from "./components/CameraScan.svelte";
-    import {cameraScanIsOpened, uglyMenuIsShown} from "./lib/stores";
-    import AddFromImage from "./components/AddFromImage.svelte";
-    import Searchbar from "./components/Searchbar.svelte";
-    import SettingButton from "./components/SettingsButton.svelte";
-    import AddButton from "./components/AddButton.svelte";
+    import {page} from "./lib/stores";
+    import MainPage from "./MainPage.svelte";
+    import AddPage from "./AddPage.svelte";
+    import {PAGE_ADD, PAGE_MAIN, PAGE_SCAN_QR} from "./lib/pages";
 
     onMount(() => {
         accounts.loadAccounts();
@@ -36,33 +27,17 @@
     })
 </script>
 
-<div class="title-bar"></div>
-<main class="container">
-    <div class="top-menu">
-        <Searchbar/>
-        <SettingButton/>
-        <AddButton/>
-    </div>
-    {#if $uglyMenuIsShown}
-        <div class="group">
-            <AddAccountButton/>
-            <AddFromCamera/>
-            <AddManually/>
-            <AddFromImage/>
-        </div>
-        <div class="group">
-            <ImportAccounts/>
-            <ExportAccounts/>
-        </div>
+<div>
+    <div class="title-bar"></div>
+    {#if $page === PAGE_MAIN}
+        <MainPage/>
+    {:else if $page === PAGE_ADD}
+        <AddPage/>
+    {:else if $page === PAGE_SCAN_QR}
+        <AddPage/>
     {/if}
-    {#if $manualFormOpened}
-        <ManualForm/>
-    {/if}
-    {#if $cameraScanIsOpened}
-        <CameraScan/>
-    {/if}
-    <Codes/>
-</main>
+</div>
+
 
 <style>
     .title-bar {
@@ -70,32 +45,5 @@
         -webkit-app-region: drag;
         width: 100%;
         height: 25px;
-    }
-
-    .top-menu {
-        padding: 20px;
-
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-    }
-
-    .container {
-        margin: 0;
-        padding: 10px 0 0 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: start;
-        align-content: start;
-        width: 100vw;
-        height: 100vh;
-    }
-
-    .group {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        justify-content: space-evenly;
-        align-content: center;
     }
 </style>

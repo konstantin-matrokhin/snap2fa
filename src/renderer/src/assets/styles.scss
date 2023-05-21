@@ -16,6 +16,19 @@ body {
     -webkit-text-size-adjust: 100%;
 }
 
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: grey;
+}
+
+:root {
+    color-scheme: dark;
+}
+
 @font-face {
     font-display: 'Golos';
     src: local('./assets/golos.ttf');
@@ -25,4 +38,15 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+.container {
+    margin: 0;
+    padding: 10px 0 0 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-content: start;
+    width: 100vw;
+    height: 100vh;
 }

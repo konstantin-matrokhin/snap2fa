@@ -31,7 +31,7 @@
         &__circle {
             stroke-dasharray: 81px;
             stroke-dashoffset: 0;
-            stroke-linecap: square;
+            stroke-linecap: butt;
             stroke-width: 6px;
             stroke: #000;
             fill: none;

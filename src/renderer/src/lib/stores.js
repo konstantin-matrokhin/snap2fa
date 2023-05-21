@@ -1,5 +1,6 @@
 import {derived, readable, writable} from 'svelte/store'
 import {generateCode, validateSecret} from './utils.js'
+import {PAGE_MAIN} from "./pages";
 
 function createMessage() {
     const { subscribe, set, update } = writable('')
@@ -16,13 +17,6 @@ function createMessage() {
         }
     }
 }
-
-export const timer = readable(new Date(), (set) => {
-    const interval = setInterval(() => {
-        set(new Date())
-    }, 500)
-    return () => clearInterval(interval)
-})
 
 function createAccounts() {
     const { subscribe, set, update } = writable(new Map());
@@ -58,6 +52,14 @@ function createAccounts() {
         }
     }
 }
+
+export const timer = readable(new Date(), (set) => {
+    const interval = setInterval(() => {
+        set(new Date())
+    }, 500)
+    return () => clearInterval(interval)
+})
+
 export const accounts = createAccounts();
 
 export const message = createMessage();
@@ -73,3 +75,5 @@ export const codes = derived([timer, accounts], ([$timer, $accounts]) => {
 export const manualFormOpened = writable(false);
 export const cameraScanIsOpened = writable(false);
 export const uglyMenuIsShown = writable(false);
+
+export const page = writable(PAGE_MAIN);

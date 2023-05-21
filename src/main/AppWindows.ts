@@ -10,7 +10,7 @@ export class AppWindows {
             backgroundColor: '#0E0E0E',
             minimizable: false,
             maximizable: false,
-            width: 325,
+            width: 334,
             height: 700,
             resizable: false,
             alwaysOnTop: false,
@@ -41,7 +41,7 @@ export class AppWindows {
             height: 300,
             alwaysOnTop: true,
             opacity: .5,
-            webPreferences: { 
+            webPreferences: {
                 sandbox: false,
                 preload: join(__dirname, '../preload/index.js'),
                 webSecurity: false,

@@ -2,14 +2,9 @@
     import {accounts} from "./lib/stores.js";
     import {onMount} from "svelte";
     import {getRandomNumber} from "./lib/utils";
-    import {page} from "./lib/stores";
-    import MainPage from "./MainPage.svelte";
-    import AddPage from "./AddPage.svelte";
-    import {PAGE_ADD, PAGE_MAIN, PAGE_SCAN_QR} from "./lib/pages";
-
-    onMount(() => {
-        accounts.loadAccounts();
-    })
+    import {message, page} from "./lib/stores";
+    import {defaultPage, pageMapping} from "./lib/pages";
+    import Message from "./components/Message.svelte";
 
     const ipcRenderer = window.electron.ipcRenderer;
 
@@ -25,16 +20,23 @@
             accounts.add(randomNumber + i, {issuer, account, secret});
         }
     })
+
+    function computePageComponent(page) {
+        return pageMapping.get(page) ?? defaultPage();
+    }
+
+    onMount(() => {
+        accounts.loadAccounts();
+    });
+
+    $: pageComponent = computePageComponent($page)
 </script>
 
 <div>
     <div class="title-bar"></div>
-    {#if $page === PAGE_MAIN}
-        <MainPage/>
-    {:else if $page === PAGE_ADD}
-        <AddPage/>
-    {:else if $page === PAGE_SCAN_QR}
-        <AddPage/>
+    <svelte:component this={pageComponent}/>
+    {#if $message}
+        <Message/>
     {/if}
 </div>
 

@@ -11,25 +11,28 @@
 </script>
 
 <button class="button" on:click={handleClick}>
-    <i class="button__icon button__icon_{icon}"></i>
+    {#if icon}
+        <i class="button__icon button__icon_{icon}"></i>
+    {/if}
     {text}
 </button>
 
 <style lang="scss">
     .button {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 16px;
+        padding: 13px 25px 13px 23px;
         width: 294px;
-        height: 84px;
-        background: #BBB9FF;
+        height: 50px;
+        background: #F3F3F3;
         border-radius: 12px;
-        color: #181818;
-        border: none;
-        margin: 8px 20px;
         font-size: 16px;
         line-height: 24px;
+        color: #181818;
+        position: absolute;
+        bottom: 20px;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        border: none;
         cursor: pointer;
 
         &__icon {

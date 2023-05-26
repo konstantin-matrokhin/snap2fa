@@ -1,13 +1,16 @@
 <script>
-    import {page, uglyMenuIsShown} from "../lib/stores";
-    import {PAGE_ADD} from "../lib/pages";
+    import {goto, PAGE_ADD, PAGE_MAIN} from "../lib/pages";
+
+    export let isCloseButton = false;
 
     function onClick() {
-        page.set(PAGE_ADD);
+        goto(isCloseButton ? PAGE_MAIN : PAGE_ADD);
     }
 </script>
 
-<button on:click={onClick} class="add-button"><i class="add-button__icon"></i></button>
+<button on:click={onClick} class="add-button">
+    <i class="add-button__icon" style="--rotate: {isCloseButton ? '45deg' : '0deg'}"></i>
+</button>
 
 <style lang="scss">
     .add-button {
@@ -25,6 +28,7 @@
             width: 14px;
             height: 14px;
             background-image: url('../assets/plus.svg');
+            rotate: var(--rotate);
             margin: 0 auto;
         }
     }

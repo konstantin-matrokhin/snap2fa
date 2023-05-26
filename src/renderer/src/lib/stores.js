@@ -1,6 +1,6 @@
 import {derived, readable, writable} from 'svelte/store'
 import {generateCode, validateSecret} from './utils.js'
-import {PAGE_MAIN} from "./pages";
+import {defaultPage, defaultPageName, PAGE_MAIN} from "./pages";
 
 function createMessage() {
     const { subscribe, set, update } = writable('')
@@ -72,8 +72,6 @@ export const codes = derived([timer, accounts], ([$timer, $accounts]) => {
     return codesMap
 })
 
-export const manualFormOpened = writable(false);
-export const cameraScanIsOpened = writable(false);
 export const uglyMenuIsShown = writable(false);
 
-export const page = writable(PAGE_MAIN);
+export const page = writable(defaultPageName());

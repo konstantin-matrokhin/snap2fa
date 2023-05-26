@@ -6,6 +6,7 @@ import ImageUploading from "../pages/ImageUploadingPage.svelte";
 import WebcamReading from "../pages/WebcamReadingPage.svelte";
 import ScreenReading from "../pages/ScreenReadingPage.svelte";
 import ManualEnterPage from "../pages/ManualEnterPage.svelte";
+import ImportPage from "../pages/ImportPage.svelte";
 
 export const PAGE_MAIN = 'PAGE_MAIN';
 export const PAGE_ADD = 'PAGE_ADD';
@@ -24,6 +25,7 @@ export const pageMapping = new Map([
     [PAGE_IMAGE_UPLOADING, ImageUploading],
     [PAGE_WEBCAM, WebcamReading],
     [PAGE_ADD_MANUALLY, ManualEnterPage],
+    [PAGE_IMPORT, ImportPage],
 ]);
 
 export function defaultPage() {

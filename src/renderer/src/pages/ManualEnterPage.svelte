@@ -2,8 +2,7 @@
     import {accounts, message} from "../lib/stores";
     import {getRandomNumber, validateSecret} from "../lib/utils";
     import TopMenu from "../components/TopMenu.svelte";
-    import PrimaryButton from "../components/PrimaryButton.svelte";
-    import {goto, PAGE_MAIN} from "../lib/pages";
+    import {defaultPageName, goto, PAGE_MAIN} from "../lib/pages";
     import CancelButton from "../components/CancelButton.svelte";
 
     let issuer = '';
@@ -16,6 +15,7 @@
             message.show(error);
         } else {
             accounts.add(getRandomNumber(100, 999), {issuer, account, secret});
+            goto(defaultPageName());
         }
     }
 

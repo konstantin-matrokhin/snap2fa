@@ -7,6 +7,8 @@
 
     const ipcRenderer = window.electron.ipcRenderer;
 
+    let done = false;
+
     function readScreen() {
         ipcRenderer.send('qr:open', {});
     }
@@ -15,12 +17,22 @@
         pages.goto(PAGE_MAIN);
     }
 
-    onMount(readScreen);
+    onMount(() => {
+        readScreen();
+        ipcRenderer.on('qr:parsed', () => {
+            done = true;
+            setTimeout(gotoMain, 3000);
+        });
+    });
 </script>
 
 <div>
     <TopMenu/>
-    <h2>Scanning...</h2>
-    <p>Point a new window to hover over the QR Code</p>
-    <PrimaryButton text="Cancel" onClick={gotoMain}/>
+    {#if !done}
+        <h2>Scanning...</h2>
+        <p>Point a new window to hover over the QR Code</p>
+        <PrimaryButton text="Cancel" onClick={gotoMain}/>
+    {:else}
+        <h2>Account Added</h2>
+    {/if}
 </div>

@@ -1,6 +1,6 @@
 <script>
     import {BrowserQRCodeReader} from "@zxing/browser";
-    import {cameraScanIsOpened} from "../lib/stores";
+    import {onDestroy, onMount} from "svelte";
 
     const ipcRenderer = window.electron.ipcRenderer;
 
@@ -39,14 +39,19 @@
         const codeReader = new BrowserQRCodeReader();
         codeReader.decodeFromStream(stream, video, result => {
             if (result) {
-                cameraScanIsOpened.set(false);
                 video.srcObject = null;
                 ipcRenderer.send('qr:read', result);
             }
         });
     }
 
-    init();
+    onMount(init);
+
+    onDestroy(() => {
+        videoStream.getVideoTracks().forEach(track => {
+            track.stop();
+        })
+    });
 </script>
 
 {#each videoDevices as device }

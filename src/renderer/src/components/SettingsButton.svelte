@@ -8,6 +8,7 @@
         background: #F9F9F9;
         border: 1px solid #181818;
         border-radius: 6px;
+        cursor: pointer;
     }
 
     .icon-settings {

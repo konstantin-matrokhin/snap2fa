@@ -1,6 +1,6 @@
 import {derived, readable, writable} from 'svelte/store'
 import {generateCode, validateSecret} from './utils.js'
-import {defaultPage, defaultPageName, PAGE_MAIN} from "./pages";
+import {defaultPageName} from "./pages";
 
 function createMessage() {
     const { subscribe, set, update } = writable('')

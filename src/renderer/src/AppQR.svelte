@@ -54,17 +54,4 @@
     });
 </script>
 
-<main class="container">
-    11231312312
-</main>
-
-<style>
-    .container {
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: start;
-        align-content: start;
-    }
-</style>
+<main class="container"></main>

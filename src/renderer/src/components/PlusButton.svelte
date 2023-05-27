@@ -22,6 +22,7 @@
         background: #E8A6FE;
         border: 1px solid #181818;
         border-radius: 6px;
+        cursor: pointer;
 
         &__icon {
             display: block;
